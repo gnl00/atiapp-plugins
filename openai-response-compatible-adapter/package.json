@@ -1,0 +1,11 @@
+{
+  "name": "openai-response-compatible-adapter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}

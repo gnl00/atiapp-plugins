@@ -1,0 +1,16 @@
+{
+  "id": "your-compatible-adapter",
+  "name": "Your Compatible Adapter",
+  "version": "0.1.0",
+  "description": "Local request-adapter plugin template.",
+  "capabilities": [
+    {
+      "kind": "request-adapter",
+      "providerType": "your-provider",
+      "modelTypes": ["llm"]
+    }
+  ],
+  "entries": {
+    "main": "./dist/main.js"
+  }
+}

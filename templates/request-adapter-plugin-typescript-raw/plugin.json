@@ -1,0 +1,16 @@
+{
+  "id": "your-raw-compatible-adapter",
+  "name": "Your Raw Compatible Adapter",
+  "version": "0.1.0",
+  "description": "Local request-adapter plugin template for raw chunk streaming APIs.",
+  "capabilities": [
+    {
+      "kind": "request-adapter",
+      "providerType": "your-provider",
+      "modelTypes": ["llm"]
+    }
+  ],
+  "entries": {
+    "main": "./dist/main.js"
+  }
+}

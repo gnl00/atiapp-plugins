@@ -14,6 +14,37 @@ This repository hosts standalone request-adapter plugins and plugin templates us
   TypeScript Gemini-compatible adapter example.
 - `templates`
   Starter templates for building new request-adapter plugins.
+- `registry.json`
+  Official remote plugin catalog consumed by the app. Templates are intentionally excluded.
+
+## Plugin Registry
+
+`registry.json` is generated from the repository contents and is the only file the app should consume as a remote plugin catalog.
+
+Generation rules:
+
+- scan only first-level plugin directories
+- exclude reserved directories such as `templates`, `.github`, `scripts`, and `node_modules`
+- require a valid `plugin.json`
+- require `entries.main` to exist on disk
+
+Useful commands:
+
+```bash
+npm run generate:registry
+```
+
+```bash
+npm run check:registry
+```
+
+Install dependencies once to enable Husky-managed git hooks:
+
+```bash
+npm install
+```
+
+After dependencies are installed, Husky will install the `pre-commit` hook automatically and regenerate `registry.json` before each commit.
 
 ## Plugin Structure
 

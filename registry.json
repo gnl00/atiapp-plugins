@@ -1,0 +1,72 @@
+{
+  "repo": "gnl00/atiapp-plugins",
+  "ref": "main",
+  "plugins": [
+    {
+      "id": "gemini-compatible-adapter",
+      "path": "google-gemini-compatible-adapter",
+      "name": "Google Gemini Compatible Adapter",
+      "version": "0.1.0",
+      "description": "Local request-adapter plugin for Google Gemini GenerateContent API.",
+      "manifest": "google-gemini-compatible-adapter/plugin.json",
+      "readme": "google-gemini-compatible-adapter/README.md",
+      "entries": {
+        "main": "main.mjs"
+      },
+      "capabilities": [
+        {
+          "kind": "request-adapter",
+          "providerType": "gemini",
+          "modelTypes": [
+            "llm",
+            "vlm"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "google-gemini-compatible-adapter-typescript",
+      "path": "google-gemini-compatible-adapter-typescript",
+      "name": "Google Gemini Compatible Adapter",
+      "version": "0.1.1",
+      "description": "Local request-adapter plugin for Google Gemini GenerateContent API, implemented in TypeScript.",
+      "manifest": "google-gemini-compatible-adapter-typescript/plugin.json",
+      "readme": "google-gemini-compatible-adapter-typescript/README.md",
+      "entries": {
+        "main": "dist/main.js"
+      },
+      "capabilities": [
+        {
+          "kind": "request-adapter",
+          "providerType": "gemini",
+          "modelTypes": [
+            "llm",
+            "vlm"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "openai-response-compatible-adapter",
+      "path": "openai-response-compatible-adapter",
+      "name": "OpenAI Responses Compatible Adapter",
+      "version": "0.1.0",
+      "description": "Local request-adapter plugin for the OpenAI Responses API.",
+      "manifest": "openai-response-compatible-adapter/plugin.json",
+      "readme": "openai-response-compatible-adapter/README.md",
+      "entries": {
+        "main": "dist/main.js"
+      },
+      "capabilities": [
+        {
+          "kind": "request-adapter",
+          "providerType": "openai-response",
+          "modelTypes": [
+            "llm",
+            "vlm"
+          ]
+        }
+      ]
+    }
+  ]
+}

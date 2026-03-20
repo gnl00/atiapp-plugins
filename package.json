@@ -1,0 +1,14 @@
+{
+  "name": "atiapp-plugins",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Official remote plugin registry and plugin sources for atiapp.",
+  "scripts": {
+    "prepare": "husky",
+    "generate:registry": "node ./scripts/generate-registry.mjs",
+    "check:registry": "node ./scripts/check-registry.mjs"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

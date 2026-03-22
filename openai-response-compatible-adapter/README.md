@@ -39,5 +39,7 @@ The built entry is:
 ## Notes
 
 - `request.systemPrompt` is mapped into `instructions`
+- OpenAI Responses `prompt` is a prompt-template reference object, not the system prompt field
+- if you need to send a Responses API `prompt` object, pass it through `request.requestOverrides.prompt`
 - user and assistant messages are mapped into `input`
 - tool results are mapped into `function_call_output`

@@ -323,10 +323,6 @@ export const openAIResponsesRequestAdapter: RequestAdapterHooks = {
       body.tool_choice = 'auto'
     }
 
-    if (request.requestOverrides && typeof request.requestOverrides === 'object') {
-      Object.assign(body, request.requestOverrides)
-    }
-
     return {
       endpoint: `${request.baseUrl}/responses`,
       headers: {

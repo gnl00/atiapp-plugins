@@ -1,7 +1,7 @@
 {
   "id": "openai-response-compatible-adapter",
   "name": "OpenAI Responses Compatible Adapter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local request-adapter plugin for the OpenAI Responses API.",
   "capabilities": [
     {

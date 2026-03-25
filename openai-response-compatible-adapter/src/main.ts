@@ -14,11 +14,6 @@ type ResponseInputText = {
   text: string
 }
 
-type ResponseOutputText = {
-  type: 'output_text'
-  text: string
-}
-
 type ResponseInputImage = {
   type: 'input_image'
   image_url: string
@@ -26,8 +21,9 @@ type ResponseInputImage = {
 }
 
 type ResponseMessageInput = {
-  role: 'user' | 'assistant' | 'developer'
-  content: Array<ResponseInputText | ResponseOutputText | ResponseInputImage>
+  type: 'message'
+  role: 'user' | 'assistant' | 'developer' | 'system'
+  content: Array<ResponseInputText | ResponseInputImage>
 }
 
 type ResponseFunctionCallInput = {
@@ -65,34 +61,27 @@ const extractTextContent = (content: ChatMessage['content']): string => {
 
 const toResponseContent = (
   content: ChatMessage['content'],
-  role: ChatMessage['role']
-): Array<ResponseInputText | ResponseOutputText | ResponseInputImage> => {
+): Array<ResponseInputText | ResponseInputImage> => {
   if (typeof content === 'string') {
     if (!content) {
       return []
     }
 
-    return role === 'assistant'
-      ? [{ type: 'output_text', text: content }]
-      : [{ type: 'input_text', text: content }]
+    return [{ type: 'input_text', text: content }]
   }
 
   if (!Array.isArray(content)) {
     return []
   }
 
-  return content.reduce<Array<ResponseInputText | ResponseOutputText | ResponseInputImage>>((result, part) => {
+  return content.reduce<Array<ResponseInputText | ResponseInputImage>>((result, part) => {
     if (!part || typeof part !== 'object') {
       return result
     }
 
     const typedPart = part as VLMContent
     if (typedPart.type === 'text' && typeof typedPart.text === 'string') {
-      result.push(
-        role === 'assistant'
-          ? { type: 'output_text', text: typedPart.text }
-          : { type: 'input_text', text: typedPart.text }
-      )
+      result.push({ type: 'input_text', text: typedPart.text })
       return result
     }
 
@@ -144,10 +133,19 @@ const transformMessages = (
       continue
     }
 
-    const responseContent = toResponseContent(message.content, message.role)
+    const responseContent = toResponseContent(message.content)
     if (responseContent.length > 0) {
+      const role = (
+        message.role === 'assistant'
+        || message.role === 'developer'
+        || message.role === 'system'
+      )
+        ? message.role
+        : 'user'
+
       input.push({
-        role: message.role === 'assistant' ? 'assistant' : 'user',
+        type: 'message',
+        role,
         content: responseContent
       })
     }

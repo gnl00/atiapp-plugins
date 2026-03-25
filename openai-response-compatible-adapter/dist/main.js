@@ -10,14 +10,12 @@ const extractTextContent = (content) => {
     }
     return '';
 };
-const toResponseContent = (content, role) => {
+const toResponseContent = (content) => {
     if (typeof content === 'string') {
         if (!content) {
             return [];
         }
-        return role === 'assistant'
-            ? [{ type: 'output_text', text: content }]
-            : [{ type: 'input_text', text: content }];
+        return [{ type: 'input_text', text: content }];
     }
     if (!Array.isArray(content)) {
         return [];
@@ -28,9 +26,7 @@ const toResponseContent = (content, role) => {
         }
         const typedPart = part;
         if (typedPart.type === 'text' && typeof typedPart.text === 'string') {
-            result.push(role === 'assistant'
-                ? { type: 'output_text', text: typedPart.text }
-                : { type: 'input_text', text: typedPart.text });
+            result.push({ type: 'input_text', text: typedPart.text });
             return result;
         }
         if (typedPart.type === 'image_url' && typedPart.image_url?.url) {
@@ -70,10 +66,16 @@ const transformMessages = (messages, systemPrompt) => {
             });
             continue;
         }
-        const responseContent = toResponseContent(message.content, message.role);
+        const responseContent = toResponseContent(message.content);
         if (responseContent.length > 0) {
+            const role = (message.role === 'assistant'
+                || message.role === 'developer'
+                || message.role === 'system')
+                ? message.role
+                : 'user';
             input.push({
-                role: message.role === 'assistant' ? 'assistant' : 'user',
+                type: 'message',
+                role,
                 content: responseContent
             });
         }

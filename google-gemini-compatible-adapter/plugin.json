@@ -1,7 +1,7 @@
 {
   "id": "gemini-compatible-adapter",
   "name": "Google Gemini Compatible Adapter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local request-adapter plugin for Google Gemini GenerateContent API.",
   "capabilities": [
     {
@@ -10,7 +10,11 @@
       "modelTypes": [
         "llm",
         "vlm"
-      ]
+      ],
+      "thinking": {
+        "levels": ["minimal", "low", "medium", "high"],
+        "defaultLevel": "high"
+      }
     }
   ],
   "entries": {

@@ -8,6 +8,12 @@ import type {
   ToolDefinition
 } from './types.js'
 
+const THINKING_LEVELS = new Set(['minimal', 'low', 'medium', 'high'])
+
+const normalizeThinkingLevel = (value: unknown): string | undefined => {
+  return typeof value === 'string' && THINKING_LEVELS.has(value) ? value : undefined
+}
+
 const extractTextContent = (content: ChatMessage['content']): string => {
   if (typeof content === 'string') {
     return content
@@ -204,6 +210,21 @@ const extractToolCallsFromParts = (parts: any[]): IToolCall[] | undefined => {
 
 const extractPayload = (raw: unknown): any => Array.isArray(raw) ? raw[0] : raw
 
+const buildGenerationConfig = (request: Parameters<RequestAdapterHooks['request']>[0]['request']): Record<string, unknown> | undefined => {
+  const generationConfig: Record<string, unknown> = {}
+
+  if (request.options?.maxTokens !== undefined) {
+    generationConfig.maxOutputTokens = request.options.maxTokens
+  }
+
+  const thinkingLevel = normalizeThinkingLevel(request.options?.thinkingLevel)
+  if (thinkingLevel) {
+    generationConfig.thinkingConfig = { thinkingLevel }
+  }
+
+  return Object.keys(generationConfig).length > 0 ? generationConfig : undefined
+}
+
 // This example implements both non-stream and stream handling:
 // - request(): chooses generateContent vs streamGenerateContent
 // - parseResponse(): parses one complete non-stream Gemini response
@@ -222,13 +243,12 @@ export const geminiRequestAdapter: RequestAdapterHooks = {
     const endpoint = request.stream === false
       ? `${request.baseUrl}/${modelName}:generateContent`
       : `${request.baseUrl}/${modelName}:streamGenerateContent?alt=sse`
+    const generationConfig = buildGenerationConfig(request)
 
     const body: Record<string, unknown> = {
       contents,
       ...(systemInstruction ? { systemInstruction } : {}),
-      ...(request.options?.maxTokens !== undefined
-        ? { generationConfig: { maxOutputTokens: request.options.maxTokens } }
-        : {})
+      ...(generationConfig ? { generationConfig } : {})
     }
 
     const tools = transformToolDefinitions(request.tools)

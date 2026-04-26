@@ -45,6 +45,7 @@ export interface IUnifiedRequest {
   requestOverrides?: Record<string, unknown>
   options?: {
     maxTokens?: number
+    thinkingLevel?: string
   }
 }
 

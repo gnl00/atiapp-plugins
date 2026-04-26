@@ -1,3 +1,7 @@
+const THINKING_LEVELS = new Set(['none', 'minimal', 'low', 'medium', 'high', 'xhigh']);
+const normalizeThinkingLevel = (value) => {
+    return typeof value === 'string' && THINKING_LEVELS.has(value) ? value : undefined;
+};
 const extractTextContent = (content) => {
     if (typeof content === 'string') {
         return content;
@@ -215,6 +219,12 @@ export const openAIResponsesRequestAdapter = {
         }
         if (request.options?.maxTokens !== undefined) {
             body.max_output_tokens = request.options.maxTokens;
+        }
+        const thinkingLevel = normalizeThinkingLevel(request.options?.thinkingLevel);
+        if (thinkingLevel) {
+            body.reasoning = {
+                effort: thinkingLevel
+            };
         }
         const tools = transformTools(request.tools);
         if (tools) {

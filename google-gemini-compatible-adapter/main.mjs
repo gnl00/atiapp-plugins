@@ -1,3 +1,9 @@
+const THINKING_LEVELS = new Set(['minimal', 'low', 'medium', 'high'])
+
+const normalizeThinkingLevel = (value) => (
+  typeof value === 'string' && THINKING_LEVELS.has(value) ? value : undefined
+)
+
 const extractTextContent = (content) => {
   if (typeof content === 'string') {
     return content
@@ -180,6 +186,21 @@ const extractToolCallsFromParts = (parts) => {
 
 const extractPayload = (raw) => Array.isArray(raw) ? raw[0] : raw
 
+const buildGenerationConfig = (request) => {
+  const generationConfig = {}
+
+  if (request.options?.maxTokens !== undefined) {
+    generationConfig.maxOutputTokens = request.options.maxTokens
+  }
+
+  const thinkingLevel = normalizeThinkingLevel(request.options?.thinkingLevel)
+  if (thinkingLevel) {
+    generationConfig.thinkingConfig = { thinkingLevel }
+  }
+
+  return Object.keys(generationConfig).length > 0 ? generationConfig : undefined
+}
+
 export const requestAdapter = {
   providerType: 'gemini',
   streamProtocol: 'sse',
@@ -191,13 +212,12 @@ export const requestAdapter = {
     const endpoint = request.stream === false
       ? `${request.baseUrl}/${modelName}:generateContent`
       : `${request.baseUrl}/${modelName}:streamGenerateContent?alt=sse`
+    const generationConfig = buildGenerationConfig(request)
 
     const body = {
       contents,
       ...(systemInstruction ? { systemInstruction } : {}),
-      ...(request.options?.maxTokens !== undefined
-        ? { generationConfig: { maxOutputTokens: request.options.maxTokens } }
-        : {})
+      ...(generationConfig ? { generationConfig } : {})
     }
 
     const tools = transformToolDefinitions(request.tools)
